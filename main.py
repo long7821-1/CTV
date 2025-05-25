@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
+import os
 
 app = Flask(__name__)
 
@@ -41,4 +42,5 @@ def tra_cuu():
     return jsonify({"ten": "Không tìm thấy mã này", "ma": ""})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
