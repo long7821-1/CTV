@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tra cứu Cộng Tác Viên</title>
+    <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #ffffffcc;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        img.logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #00796b;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #b2dfdb;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #00796b;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #004d40;
+        }
+
+        #ketqua {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #004d40;
+            font-weight: bold;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        <h1>Tra cứu Cộng Tác Viên</h1>
+        <input type="text" id="ma" placeholder="Nhập mã CTV (VD: ABC123)" />
+        <button onclick="traCuu()">Tra cứu</button>
+        <p id="ketqua"></p>
+    </div>
+
+    <script>
+        async function traCuu() {
+            const ma = document.getElementById("ma").value.trim();
+            const ketqua = document.getElementById("ketqua");
+            ketqua.innerHTML = "";
+
+            if (!ma) {
+                ketqua.innerText = "Vui lòng nhập mã cộng tác viên.";
+                return;
+            }
+
+            const res = await fetch("/tra-cuu", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ma: ma })
+            });
+
+            const data = await res.json();
+
+            if (!data.ma) {
+                ketqua.innerText = "Không tìm thấy mã CTV.";
+                return;
+            }
+
+            ketqua.innerHTML = `
+                Tên: ${data.ten}<br>
+                Mã CTV: ${data.ma}<br>
+                Ngân hàng: ${data.bank}<br>
+                Số tài khoản: ${data.account_no}<br>
+                Tên tài khoản: ${data.account_name}<br>
+                Lương: ${data.luong}  <!-- Thay bằng "Lương" -->
+            `;
+        }
+    </script>
+</body>
+</html>
