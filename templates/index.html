@@ -54,10 +54,27 @@
             border-radius: 10px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin: 5px;
         }
 
         button:hover {
             background-color: #004d40;
+        }
+
+        .add-button {
+            background-color: #4caf50;
+        }
+
+        .add-button:hover {
+            background-color: #388e3c;
+        }
+
+        .add-salary-button {
+            background-color: #ff9800;
+        }
+
+        .add-salary-button:hover {
+            background-color: #f57c00;
         }
 
         #ketqua {
@@ -67,14 +84,41 @@
             font-weight: bold;
             text-align: left;
         }
+
+        .logout-bar {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 14px;
+        }
+
+        .logout-bar a {
+            color: #00796b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .logout-bar a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+
+    {% if session.get('username') %}
+    <div class="logout-bar">
+        Xin chào, {{ session['username'] }} |
+        <a href="{{ url_for('logout') }}">Đăng xuất</a>
+    </div>
+    {% endif %}
+
     <div class="container">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo" onerror="this.src='{{ url_for('static', filename='fallback.png') }}'">
         <h1>Tra cứu Cộng Tác Viên</h1>
         <input type="text" id="ma" placeholder="Nhập mã CTV (VD: ABC123)" />
         <button onclick="traCuu()">Tra cứu</button>
+        <a href="{{ url_for('add_ctv') }}"><button type="button" class="add-button">Thêm CTV</button></a>
+        <a href="{{ url_for('add_salary') }}"><button type="button" class="add-salary-button">Thêm Lương</button></a>
         <p id="ketqua"></p>
     </div>
 
@@ -89,27 +133,42 @@
                 return;
             }
 
-            const res = await fetch("/tra-cuu", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ma: ma })
-            });
-
-            const data = await res.json();
-
-            if (!data.ma) {
-                ketqua.innerText = "Không tìm thấy mã CTV.";
+            if (!/^[A-Za-z0-9]+$/.test(ma)) {
+                ketqua.innerText = "Mã CTV chỉ được chứa chữ cái và số.";
                 return;
             }
 
-            ketqua.innerHTML = `
-                Tên: ${data.ten}<br>
-                Mã CTV: ${data.ma}<br>
-                Ngân hàng: ${data.bank}<br>
-                Số tài khoản: ${data.account_no}<br>
-                Tên tài khoản: ${data.account_name}<br>
-                Lương: ${data.luong}  <!-- Thay bằng "Lương" -->
-            `;
+            ketqua.innerText = "Đang tra cứu...";
+            try {
+                const res = await fetch("/tra-cuu", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ma: ma })
+                });
+
+                if (!res.ok) {
+                    ketqua.innerText = "Lỗi kết nối server. Vui lòng thử lại.";
+                    return;
+                }
+
+                const data = await res.json();
+
+                if (!data.ma) {
+                    ketqua.innerText = "Không tìm thấy mã CTV.";
+                    return;
+                }
+
+                ketqua.innerHTML = `
+                    Tên: ${data.ten}<br>
+                    Mã CTV: ${data.ma}<br>
+                    Ngân hàng: ${data.bank}<br>
+                    Số tài khoản: ${data.account_no}<br>
+                    Tên tài khoản: ${data.account_name}<br>
+                    Lương: ${data.luong}
+                `;
+            } catch (error) {
+                ketqua.innerText = "Đã xảy ra lỗi: " + error.message;
+            }
         }
     </script>
 </body>
