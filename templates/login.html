@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #ffffffcc;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #00796b;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            color: #004d40;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #b2dfdb;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #00796b;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #004d40;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .error {
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Đăng nhập</h1>
+    <form method="POST">
+        <label for="username">Tên đăng nhập</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Đăng nhập</button>
+    </form>
+
+    {% if error %}
+        <p class="message error">{{ error }}</p>
+    {% endif %}
+</div>
+</body>
+</html>
