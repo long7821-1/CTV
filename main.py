@@ -10,8 +10,8 @@ EXCEL_FILE = "ctv.xlsx"
 
 # Tài khoản admin (tùy bạn sửa thêm)
 ADMIN_USERS = {
-    "thanhthuy171nhe@gmail.com": "123456",
-    "admin": "Long2004@"
+    "admin": "123456",
+    "admin2": "matkhau2"
 }
 
 
@@ -183,4 +183,5 @@ def add_salary():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.getenv('PORT', 5000))  # Sử dụng cổng từ biến môi trường, mặc định là 5000
+    app.run(host='0.0.0.0', port=port, debug=False)  # Lắng nghe trên 0.0.0.0 và tắt debug khi triển khai
