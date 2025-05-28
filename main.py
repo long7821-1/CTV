@@ -10,8 +10,8 @@ EXCEL_FILE = "ctv.xlsx"
 
 # Tài khoản admin (tùy bạn sửa thêm)
 ADMIN_USERS = {
-    "admin": "123456",
-    "admin2": "matkhau2"
+    "thanhthuy171nhe@gmail.com": "123456",
+    "admin2": "123456"
 }
 
 
